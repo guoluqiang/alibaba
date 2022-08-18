@@ -1,0 +1,27 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.135.129:8848,192.168.135.129:8858,192.168.135.129:8868 #配置Nacos地址
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启注册中心路由功能
+      routes:
+        - id: consumer
+          uri: lb://nacos-order-consumer
+          predicates:
+            - Path=/nacos-order-consumer/**
+          filters:
+            - StripPrefix=1
+        - id: provider
+          uri: lb://nacos-payment-provider
+          predicates:
+            - Path=/nacos-payment-provider/**
+          filters:
+            - StripPrefix=1
